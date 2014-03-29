@@ -8,4 +8,4 @@ Description
 
 This is an arduino based project for building a keyboard design for visually dispaired people. Based on Perkin's machine, a typewriter for braille code, we try to make a digitial text input for computers with USB connection.
 
-![alt tag](http://www.gcu.edu.pk/Images/CSS/Brails.JPG)
+![alt tag](http://americanthermoform.com/wp-content/uploads/2012/07/StandardPerkinsBrailler2.jpg)

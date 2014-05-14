@@ -1,13 +1,14 @@
 #include <CapacitiveSensor.h>
 
 // capacitive sensores
-CapacitiveSensor   cs_1 = CapacitiveSensor(9,2);        
-CapacitiveSensor   cs_2 = CapacitiveSensor(9,3);        
-CapacitiveSensor   cs_3 = CapacitiveSensor(9,8);        
-CapacitiveSensor   cs_4 = CapacitiveSensor(13,6);        
-CapacitiveSensor   cs_5 = CapacitiveSensor(13,11);        
-CapacitiveSensor   cs_6 = CapacitiveSensor(13,12);        
-CapacitiveSensor   cs_7 = CapacitiveSensor(13,4);        
+CapacitiveSensor   cs_1 = CapacitiveSensor(8,13);        
+CapacitiveSensor   cs_2 = CapacitiveSensor(8,12);        
+CapacitiveSensor   cs_3 = CapacitiveSensor(8,11);        
+CapacitiveSensor   cs_4 = CapacitiveSensor(3,7);        
+CapacitiveSensor   cs_5 = CapacitiveSensor(3,6);        
+CapacitiveSensor   cs_6 = CapacitiveSensor(3,5);        
+CapacitiveSensor   cs_7 = CapacitiveSensor(8,9);        
+CapacitiveSensor   cs_8 = CapacitiveSensor(3,4);        
    
 
 boolean cs_1_started = false;
@@ -17,6 +18,7 @@ boolean cs_4_started = false;
 boolean cs_5_started = false;
 boolean cs_6_started = false;
 boolean cs_7_started = false;
+boolean cs_8_started = false;
 
 boolean cs_1_touched = false;
 boolean cs_2_touched = false;
@@ -25,6 +27,7 @@ boolean cs_4_touched = false;
 boolean cs_5_touched = false;
 boolean cs_6_touched = false;
 boolean cs_7_touched = false;
+boolean cs_8_touched = false;
 
 boolean anyone_touched = false;
 
@@ -39,7 +42,8 @@ char out = ' ';
 
 void setup() 
 {                
-  Serial.begin(9600);  
+  Serial.begin(10600);  
+  Keyboard.begin();
 }
 
 void set_output() 
@@ -311,10 +315,21 @@ void set_output()
     cs_1_touched == false && cs_4_touched == false &&
     cs_2_touched == false && cs_5_touched == false &&
     cs_3_touched == false && cs_6_touched == false && 
-    cs_7_touched == true     
+    cs_7_touched == true && cs_8_touched == false     
   )
   {
-    Serial.print(' ');
+    Keyboard.write(' ');
+  }
+
+  if
+  (
+    cs_1_touched == false && cs_4_touched == false &&
+    cs_2_touched == false && cs_5_touched == false &&
+    cs_3_touched == false && cs_6_touched == false && 
+    cs_7_touched == false && cs_8_touched == true    
+  )
+  {
+    Keyboard.write(8);
   }
 
 }
@@ -329,21 +344,24 @@ void loop()
   long total_5 =  cs_5.capacitiveSensor(30);
   long total_6 =  cs_6.capacitiveSensor(30);
   long total_7 =  cs_7.capacitiveSensor(30);
+  long total_8 =  cs_8.capacitiveSensor(30);
  
-  // Serial.print(total_1);
-  // Serial.print('\t');
-  // Serial.print(total_2);
-  // Serial.print('\t');
-  // Serial.print(total_3);
-  // Serial.print('\t');
-  // Serial.print(total_4);
-  // Serial.print('\t');
-  // Serial.print(total_5);
-  // Serial.print('\t');
-  // Serial.print(total_6);
-  // Serial.print('\t');
-  // Serial.print(total_7);
-  // Serial.println('\t');
+  Serial.print(total_1);
+  Serial.print('\t');
+  Serial.print(total_2);
+  Serial.print('\t');
+  Serial.print(total_3);
+  Serial.print('\t');
+  Serial.print(total_4);
+  Serial.print('\t');
+  Serial.print(total_5);
+  Serial.print('\t');
+  Serial.print(total_6);
+  Serial.print('\t');
+  Serial.print(total_7);
+  Serial.print('\t');  
+  Serial.println(total_8);
+
 
 
   if( 
@@ -353,7 +371,8 @@ void loop()
     cs_4_started == true || 
     cs_5_started == true || 
     cs_6_started == true || 
-    cs_7_started == true
+    cs_7_started == true || 
+    cs_8_started == true
   )
   {
     anyone_touched = true;
@@ -514,6 +533,26 @@ void loop()
     }
   } 
 
+  if( cs_8_started == false )
+  {
+    if( total_8 > active_touch_threeshold )
+    {
+      // set back button as touched  
+      cs_8_started = true;
+      cs_8_touched = true;
+  
+    }
+  }
+  else
+  {
+    if( total_8 < active_touch_threeshold )
+    {
+      // set back button as touched  
+      cs_8_started = false;
+
+    }
+  } 
+
 
   if( 
     anyone_touched == true &&
@@ -523,7 +562,8 @@ void loop()
     cs_4_started == false && 
     cs_5_started == false && 
     cs_6_started == false && 
-    cs_7_started == false 
+    cs_7_started == false && 
+    cs_8_started == false 
   )
   {
     set_output();
@@ -531,7 +571,7 @@ void loop()
     
     if( out != ' ' )
     {
-       Serial.print(out);
+       Keyboard.write(out);
     }
 
     cs_1_touched = false;
@@ -541,10 +581,13 @@ void loop()
     cs_5_touched = false;
     cs_6_touched = false;
     cs_7_touched = false;
+    cs_8_touched = false;
      
     out = ' ';
 
   }
 
   delay(30);
+  
+
 }
